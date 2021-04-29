@@ -1,5 +1,5 @@
 // document.querySelector(".coursebox").innerHTML += `<iframe src="http://127.0.0.1:5501/index.html" width="1000" height="750"></iframe>`;
-// chạy code này bằng localhost=>copy link localhost thay vào src => thay element trong querySelector bằng element mà bạn muốn nhúng vào => paste vào console web => quẩy
+// chạy code dưới bằng localhost => copy link localhost thay vào src => thay element trong querySelector bằng element mà bạn muốn nhúng vào => paste vào console web => quẩy
 
 const BadAppleSound = new Audio();
 BadAppleSound.src = "./BadAppleSound.mp3";
