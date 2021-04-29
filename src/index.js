@@ -1,5 +1,5 @@
 // document.querySelector(".coursebox").innerHTML += `<iframe src="http://127.0.0.1:5501/index.html" width="1000" height="750"></iframe>`;
-//chạy code này bằng localhost=>copy link localhost thay vào src => thay element trong querySelector bằng element mà bạn muốn nhúng vào => paste vào console web => quẩy
+// chạy code này bằng localhost=>copy link localhost thay vào src => thay element trong querySelector bằng element mà bạn muốn nhúng vào => paste vào console web => quẩy
 
 const BadAppleSound = new Audio();
 BadAppleSound.src = "./BadAppleSound.mp3";
@@ -48,7 +48,6 @@ const grayRamp =
     "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 const rampLength = grayRamp.length;
 
-// the grayScale value is an integer ranging from 0 (black) to 255 (white)
 const getCharacterForGrayScale = (grayScale) =>
     grayRamp[Math.ceil(((rampLength - 1) * grayScale) / 255)];
 
@@ -73,7 +72,7 @@ const drawAscii = (grayScales, width) => {
 let counter = 1;
 
 let img = new Image();
-let imgSrc;
+let imgCounter;
 img.onload = () => {
     const [width, height] = clampDimensions(img.width, img.height);
 
@@ -88,19 +87,20 @@ img.onload = () => {
 };
 let drawLoop = setInterval(() => {
     if (counter < 10) {
-        imgSrc = `./frames/BadApple ` + `000${counter}` + `.jpg`;
+        imgCounter = `000${counter}`;
     } else if (counter < 100) {
-        imgSrc = `./frames/BadApple ` + `00${counter}` + `.jpg`;
+        imgCounter = `00${counter}`;
     } else if (counter < 1000) {
-        imgSrc = `./frames/BadApple ` + `0${counter}` + `.jpg`;
+        imgCounter = `0${counter}`;
     } else {
-        imgSrc = `./frames/BadApple ` + `${counter}` + `.jpg`;
+        imgCounter = `${counter}`;
     }
 
-    img.src = imgSrc;
+    img.src = `./frames/BadApple ` + imgCounter + `.jpg`;
 
     if (counter === 6493) {
         clearInterval(drawLoop);
     }
+
     counter++;
 }, 1000 / FPS);
