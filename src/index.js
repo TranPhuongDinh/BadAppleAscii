@@ -1,36 +1,3 @@
-let oReq = new XMLHttpRequest();
-
-oReq.addEventListener("progress", updateProgress);
-oReq.addEventListener("load", transferComplete);
-oReq.addEventListener("error", transferFailed);
-oReq.addEventListener("abort", transferCanceled);
-
-// ...
-
-// progress on transfers from the server to the client (downloads)
-function updateProgress(oEvent) {
-    if (oEvent.lengthComputable) {
-        let percentComplete = (oEvent.loaded / oEvent.total) * 100;
-        document.querySelector(".percent-loaded").innerText = percentComplete;
-    } else {
-        // Unable to compute progress information since the total size is unknown
-    }
-}
-
-function transferComplete(evt) {
-    console.log("The transfer is complete.");
-}
-
-function transferFailed(evt) {
-    console.log("An error occurred while transferring the file.");
-}
-
-function transferCanceled(evt) {
-    console.log("The transfer has been canceled by the user.");
-}
-
-//oReq.open();
-
 window.addEventListener("load", () => {
     // document.querySelector(".coursebox").innerHTML += `<iframe src="http://127.0.0.1:5501/index.html" width="1000" height="750"></iframe>`;
     // chạy file index.html bằng localhost => copy link localhost thay vào src => thay element trong querySelector bằng element mà bạn muốn nhúng vào => paste vào console web => quẩy
