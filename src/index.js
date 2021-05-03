@@ -1,106 +1,143 @@
-// document.querySelector(".coursebox").innerHTML += `<iframe src="http://127.0.0.1:5501/index.html" width="1000" height="750"></iframe>`;
-// chạy file index.html bằng localhost => copy link localhost thay vào src => thay element trong querySelector bằng element mà bạn muốn nhúng vào => paste vào console web => quẩy
+let oReq = new XMLHttpRequest();
 
-const BadAppleSound = new Audio();
-BadAppleSound.src = "./BadAppleSound.mp3";
-BadAppleSound.play();
+oReq.addEventListener("progress", updateProgress);
+oReq.addEventListener("load", transferComplete);
+oReq.addEventListener("error", transferFailed);
+oReq.addEventListener("abort", transferCanceled);
 
-const MAXIMUM_WIDTH = 70;
-const MAXIMUM_HEIGHT = 40;
-const asciiImage = document.querySelector("#ascii");
-const canvas = document.querySelector("#canvas");
-const context = canvas.getContext("2d");
-const FPS = 30;
+// ...
 
-const toGrayScale = (r, g, b) => 0.21 * r + 0.72 * g + 0.07 * b;
-
-const clampDimensions = (width, height) => {
-    if (height > MAXIMUM_HEIGHT) {
-        const reducedWidth = Math.floor((width * MAXIMUM_HEIGHT) / height);
-        return [reducedWidth, MAXIMUM_HEIGHT];
-    }
-
-    if (width > MAXIMUM_WIDTH) {
-        const reducedHeight = Math.floor((height * MAXIMUM_WIDTH) / width);
-        return [MAXIMUM_WIDTH, reducedHeight];
-    }
-
-    return [width, height];
-};
-
-const convertToPixelData = (context, width, height) => {
-    const imageData = context.getImageData(0, 0, width, height);
-
-    const PixelData = [];
-
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        const r = imageData.data[i];
-        const g = imageData.data[i + 1];
-        const b = imageData.data[i + 2];
-
-        PixelData.push(toGrayScale(r, g, b));
-    }
-
-    return PixelData;
-};
-
-const grayRamp =
-    "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
-const rampLength = grayRamp.length;
-
-const getCharacterForGrayScale = (grayScale) =>
-    grayRamp[Math.ceil(((rampLength - 1) * grayScale) / 255)];
-
-const drawAscii = (grayScales, width) => {
-    const ascii = grayScales.reduce((asciiImage, grayScale, index) => {
-        let nextChars = getCharacterForGrayScale(grayScale);
-
-        if ((index + 1) % width === 0) {
-            nextChars += "\n";
-        }
-
-        if (index == 0) {
-            return " " + asciiImage + nextChars + " ";
-        } else {
-            return asciiImage + nextChars + " ";
-        }
-    }, "");
-
-    asciiImage.textContent = ascii;
-};
-
-let counter = 1;
-
-let img = new Image();
-let imgCounter;
-img.onload = () => {
-    const [width, height] = clampDimensions(img.width, img.height);
-
-    canvas.width = width;
-    canvas.height = height;
-
-    context.drawImage(img, 0, 0, width, height);
-
-    const pixelData = convertToPixelData(context, width, height);
-
-    drawAscii(pixelData, width);
-};
-let drawLoop = setInterval(() => {
-    if (counter < 10) {
-        imgCounter = `000${counter}`;
-    } else if (counter < 100) {
-        imgCounter = `00${counter}`;
-    } else if (counter < 1000) {
-        imgCounter = `0${counter}`;
+// progress on transfers from the server to the client (downloads)
+function updateProgress(oEvent) {
+    if (oEvent.lengthComputable) {
+        let percentComplete = (oEvent.loaded / oEvent.total) * 100;
+        document.querySelector(".percent-loaded").innerText = percentComplete;
     } else {
-        imgCounter = `${counter}`;
+        // Unable to compute progress information since the total size is unknown
     }
+}
 
-    img.src = `./frames/BadApple ` + imgCounter + `.jpg`;
+function transferComplete(evt) {
+    console.log("The transfer is complete.");
+}
 
-    if (counter === 6493) {
-        clearInterval(drawLoop);
-    }
+function transferFailed(evt) {
+    console.log("An error occurred while transferring the file.");
+}
 
-    counter++;
-}, 1000 / FPS);
+function transferCanceled(evt) {
+    console.log("The transfer has been canceled by the user.");
+}
+
+//oReq.open();
+
+window.addEventListener("load", () => {
+    // document.querySelector(".coursebox").innerHTML += `<iframe src="http://127.0.0.1:5501/index.html" width="1000" height="750"></iframe>`;
+    // chạy file index.html bằng localhost => copy link localhost thay vào src => thay element trong querySelector bằng element mà bạn muốn nhúng vào => paste vào console web => quẩy
+
+    document.querySelector(".loading-text").classList.add("fade");
+
+    const BadAppleSound = new Audio();
+    BadAppleSound.src = "./BadAppleSound.mp3";
+    BadAppleSound.play();
+
+    const MAXIMUM_WIDTH = 70;
+    const MAXIMUM_HEIGHT = 40;
+    const asciiImage = document.querySelector("#ascii");
+    const canvas = document.querySelector("#canvas");
+    const context = canvas.getContext("2d");
+    const FPS = 30;
+
+    const toGrayScale = (r, g, b) => 0.21 * r + 0.72 * g + 0.07 * b;
+
+    const clampDimensions = (width, height) => {
+        if (height > MAXIMUM_HEIGHT) {
+            const reducedWidth = Math.floor((width * MAXIMUM_HEIGHT) / height);
+            return [reducedWidth, MAXIMUM_HEIGHT];
+        }
+
+        if (width > MAXIMUM_WIDTH) {
+            const reducedHeight = Math.floor((height * MAXIMUM_WIDTH) / width);
+            return [MAXIMUM_WIDTH, reducedHeight];
+        }
+
+        return [width, height];
+    };
+
+    const convertToPixelData = (context, width, height) => {
+        const imageData = context.getImageData(0, 0, width, height);
+
+        const PixelData = [];
+
+        for (let i = 0; i < imageData.data.length; i += 4) {
+            const r = imageData.data[i];
+            const g = imageData.data[i + 1];
+            const b = imageData.data[i + 2];
+
+            PixelData.push(toGrayScale(r, g, b));
+        }
+
+        return PixelData;
+    };
+
+    const grayRamp =
+        "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+    const rampLength = grayRamp.length;
+
+    const getCharacterForGrayScale = (grayScale) =>
+        grayRamp[Math.ceil(((rampLength - 1) * grayScale) / 255)];
+
+    const drawAscii = (grayScales, width) => {
+        const ascii = grayScales.reduce((asciiImage, grayScale, index) => {
+            let nextChars = getCharacterForGrayScale(grayScale);
+
+            if ((index + 1) % width === 0) {
+                nextChars += "\n";
+            }
+
+            if (index == 0) {
+                return " " + asciiImage + nextChars + " ";
+            } else {
+                return asciiImage + nextChars + " ";
+            }
+        }, "");
+
+        asciiImage.textContent = ascii;
+    };
+
+    let counter = 1;
+
+    let img = new Image();
+    let imgCounter;
+    img.onload = () => {
+        const [width, height] = clampDimensions(img.width, img.height);
+
+        canvas.width = width;
+        canvas.height = height;
+
+        context.drawImage(img, 0, 0, width, height);
+
+        const pixelData = convertToPixelData(context, width, height);
+
+        drawAscii(pixelData, width);
+    };
+    let drawLoop = setInterval(() => {
+        if (counter < 10) {
+            imgCounter = `000${counter}`;
+        } else if (counter < 100) {
+            imgCounter = `00${counter}`;
+        } else if (counter < 1000) {
+            imgCounter = `0${counter}`;
+        } else {
+            imgCounter = `${counter}`;
+        }
+
+        img.src = `./frames/BadApple ` + imgCounter + `.jpg`;
+
+        if (counter === 6493) {
+            clearInterval(drawLoop);
+        }
+
+        counter++;
+    }, 1000 / FPS);
+});
